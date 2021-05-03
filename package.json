@@ -1,0 +1,29 @@
+{
+  "name": "lab-3-socket-chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm-run-all --parallel start-client start-server",
+    "start-client": "cd client && npm start",
+    "start-server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnrybo/lab-3-socket-chat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnrybo/lab-3-socket-chat/issues"
+  },
+  "homepage": "https://github.com/johnrybo/lab-3-socket-chat#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
+    "socket.io": "^4.0.1"
+  }
+}
