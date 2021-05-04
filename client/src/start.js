@@ -9,26 +9,41 @@ function Start() {
 
 const { username, room, getUsername, getRoom } = useContext(ChatContext)
 const socketRef = useRef();
+const rooms = ['room1', 'room2']
 
   useEffect(() => {
     socketRef.current = io.connect("/");
+    // socketRef.current.on("allRooms", listRooms);
   }, []);
 
-    function askToJoinRoom(e) {
-        e.preventDefault();
+//  function listRooms(rooms) {
+//   if(rooms) {
+//     return (
+//         rooms.map((room, index) => (
+//           <Link key={index} to={`/${room}`}><button>Join {room}</button></Link>
+//       )) 
+//       )
+//     }
+//   }
+
+    function askToJoinRoom() {
+        // e.preventDefault();
         console.log(username, room)
         socketRef.current.emit("join-room", { name: username, room: room })
       }
 
   return (
-    <div className="App">
-        <form onSubmit={askToJoinRoom}>
+    <div className="Start">
+        <form>
             <input onChange={(event) => getUsername(event.target.value)}placeholder="Username"></input>
             <input onChange={(event) => getRoom(event.target.value)}placeholder="Room"></input>
-            <Link to={`/${room}`}><button>Join room</button></Link>
+            <Link to={`/${room}`}><button onClick={askToJoinRoom}>Create room</button></Link>
         </form>
+        {rooms.map((room, index) => (
+          <Link key={index} to={`/${room}`}><button>Join {room}</button></Link>
+          ))} 
     </div>
-  );
+  )
 }
 
 export default Start;

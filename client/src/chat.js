@@ -4,11 +4,11 @@ import io from "socket.io-client";
 import { ChatContext } from './context'
 
 const Chat = (props) => {
-    const { username } = useContext(ChatContext)
-
-
+  
+  const { username } = useContext(ChatContext)
   const { roomId } = props.match.params;
 
+  // const [clientID, setClientId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -17,7 +17,6 @@ const Chat = (props) => {
 
   // https://dmitripavlutin.com/react-useeffect-explanation/
   useEffect(() => {
-    //socketRef.current = io.connect("/");
 
     socketRef.current = io.connect("/", {
       query: { roomId }
@@ -29,8 +28,6 @@ const Chat = (props) => {
       // https://www.techiediaries.com/react-usestate-hook-update-array/
       setMessages((oldMessages) => [...oldMessages, message]);
     });
-
-    socketRef.current.emit("join-room", { name: 'John', room: "admin" })
 
   }, [roomId]);
 
@@ -56,7 +53,7 @@ const Chat = (props) => {
         {messages.map((message, index) => {
           return (
             <div key={index}>
-              <div>{username}</div>
+              {/* <div>{clientID}</div> */}
               <div>{message}</div>
             </div>
           );

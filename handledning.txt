@@ -1,0 +1,8 @@
+* Lista rum när dessa skapas i server.js
+* Kom åt dessa i start.js
+* Ta bort rum från listan när ingen är kvar
+
+* Få in användarnamn istället för socket.id
+* Skapa lösenord till ett rum och logga in med det
+
+* Proxy error i terminalen
