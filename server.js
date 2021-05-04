@@ -7,6 +7,9 @@ const io = socket(server);
 
 io.on("connection", socket => {
 
+    const { roomId } = socket.handshake.query;
+    socket.join(roomId);
+
     console.log("Client was connected: ", socket.id);
 
     // Välkomnar den anslutna användaren
@@ -23,8 +26,19 @@ io.on("connection", socket => {
     // Listen for chat message
     socket.on("send message", message => {
         // Skickar meddelandet till alla inkl avsändaren
-        io.emit("message", message)
+        io.in(roomId).emit("message", message)
+        console.log(socket.id)
     })
+    
+    // Join room
+    socket.on('join-room', (data) => {
+      socket.join(data.room)
+      console.log("Rooms: ", io.sockets.adapter.rooms)
+
+      socket.to(data.room).emit('joined-room', `a user just joined ${socket.id}`)
+  })
+  
+    
 })
 
 server.listen(4000, () => console.log("server is running on port 4000"));
