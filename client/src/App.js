@@ -3,39 +3,35 @@ import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
 function App() {
-  const [yourID, setYourID] = useState();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
+  // https://dmitripavlutin.com/react-useref-guide/
   const socketRef = useRef();
 
+  // https://dmitripavlutin.com/react-useeffect-explanation/
   useEffect(() => {
     socketRef.current = io.connect("/");
 
-    socketRef.current.on("your id", (id) => {
-      setYourID(id);
-    });
-
+    // Uppdaterar statet "messages" med ett nytt message när någon skickat ett meddelande
     socketRef.current.on("message", (message) => {
-      // console.log("here");
-      receivedMessage(message);
+
+      // https://www.techiediaries.com/react-usestate-hook-update-array/
+      setMessages((oldMessages) => [...oldMessages, message]);
     });
   }, []);
 
-  function receivedMessage(message) {
-    setMessages((oldMsgs) => [...oldMsgs, message]);
-  }
-
+  // Skickar det som skrivs i textfältet
   function sendMessage(e) {
     e.preventDefault();
-    const messageObject = {
-      body: message,
-      id: yourID,
-    };
+
+    // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
-    socketRef.current.emit("send message", messageObject);
+    
+    socketRef.current.emit("send message", message);
   }
 
+  // Sparar det som skrivs i textfältet i ett state när man skriver
   function handleChange(e) {
     setMessage(e.target.value);
   }
@@ -46,7 +42,7 @@ function App() {
         {messages.map((message, index) => {
           return (
             <div key={index}>
-              <div>{message.body}</div>
+              <div>{message}</div>
             </div>
           );
         })}
@@ -65,3 +61,5 @@ function App() {
 }
 
 export default App;
+
+// https://www.youtube.com/watch?v=E4V6nbP_NoQ
