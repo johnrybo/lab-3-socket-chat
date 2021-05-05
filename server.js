@@ -2,10 +2,18 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
-const socket = require("socket.io");
-const io = socket(server);
+const { Server } = require("socket.io");
+// const cors = require('cors')
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+})
 
 const rooms = [];
+// app.use(cors());
 
 io.on("connection", socket => {
 
@@ -33,7 +41,7 @@ io.on("connection", socket => {
     });
 
     // Listen for chat message
-    socket.on("send message", message => {
+    socket.on("send-message", message => {
         // Skickar meddelandet till alla inkl avsändaren
         io.in(roomId).emit("message", socket.id + ': ' + message)
         console.log(socket.id)
@@ -50,12 +58,16 @@ io.on("connection", socket => {
 
       socket.to(data.room).emit('joined-room', `a user just joined ${socket.id}`)
 
-      
+      // i join room
   })
+
+  // i connection
 })
 
-// function getAllRooms() {
-//   return rooms;
-// }
+// emit on "join-room", "connection", "disconnected"
+function getAllRooms() {
+  // io.sockets.adapter.rooms
+  return ["room 1", "room 2"];
+}
 
-server.listen(4000, () => console.log("server is running on port 4000"));
+server.listen(3001, () => console.log("server is running on port 3001"));

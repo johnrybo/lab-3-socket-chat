@@ -1,35 +1,34 @@
 import "./App.css";
-import React, { useState, useEffect, useRef, useContext } from "react";
-import io from "socket.io-client";
+import React, { useState, useContext } from "react";
 import { ChatContext } from './context'
 
 const Chat = (props) => {
   
-  const { username } = useContext(ChatContext)
-  const { roomId } = props.match.params;
+  const { messages, handleNewMessage } = useContext(ChatContext)
+  // const { roomId } = props.match.params;
 
   // const [clientID, setClientId] = useState("");
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
-  // https://dmitripavlutin.com/react-useref-guide/
-  const socketRef = useRef();
+  // // https://dmitripavlutin.com/react-useref-guide/
+  // const socketRef = useRef();
 
-  // https://dmitripavlutin.com/react-useeffect-explanation/
-  useEffect(() => {
+  // // https://dmitripavlutin.com/react-useeffect-explanation/
+  // useEffect(() => {
 
-    socketRef.current = io.connect("/", {
-      query: { roomId }
-    });
+  //   socketRef.current = io.connect("/", {
+  //     query: { roomId }
+  //   });
 
-    // Uppdaterar statet "messages" med ett nytt message när någon skickat ett meddelande
-    socketRef.current.on("message", (message) => {
+  //   // Uppdaterar statet "messages" med ett nytt message när någon skickat ett meddelande
+  //   socketRef.current.on("message", (message) => {
 
-      // https://www.techiediaries.com/react-usestate-hook-update-array/
-      setMessages((oldMessages) => [...oldMessages, message]);
-    });
+  //     // https://www.techiediaries.com/react-usestate-hook-update-array/
+  //     setMessages((oldMessages) => [...oldMessages, message]);
+  //   });
 
-  }, [roomId]);
+  // }, [roomId]);
 
   // Skickar det som skrivs i textfältet
   function sendMessage(e) {
@@ -37,8 +36,9 @@ const Chat = (props) => {
 
     // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
-    
-    socketRef.current.emit("send message", message);
+
+    handleNewMessage(message)
+    // socketRef.current.emit("send message", message);
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
