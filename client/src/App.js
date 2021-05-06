@@ -3,7 +3,7 @@ import Start from './start'
 import Chat from './chat'
 import React from "react";
 
-import ChatProvider from './context';
+import { ChatProvider } from './context';
 
 import { Route, Switch } from "react-router-dom";
 

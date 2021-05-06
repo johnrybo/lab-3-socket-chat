@@ -1,20 +1,19 @@
-import "./App.css";
-
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import io from "socket.io-client";
-import { ChatContext } from './context'
+// import { ChatContext } from './context'
 import { Link } from "react-router-dom";
+import { useSocket } from './context'
 
 function Start() {
 
-const { username, room, getUsername, getRoom } = useContext(ChatContext)
-const socketRef = useRef();
+const { socketRef, setUsername, setRoom, username, room } = useSocket()
+// const socketRef = useRef();
 const rooms = ['room1', 'room2']
 
   useEffect(() => {
     socketRef.current = io.connect("/");
     // socketRef.current.on("allRooms", listRooms);
-  }, []);
+  }, [socketRef]);
 
 //  function listRooms(rooms) {
 //   if(rooms) {
@@ -32,19 +31,11 @@ const rooms = ['room1', 'room2']
         socketRef.current.emit("join-room", { name: username, room: room })
       }
 
-    /*  chatForm.addEventlistenter('submit', e => {
-      e.preventDefault();
-
-      const msg = e.target.elements.msg.value;
-     }) 
-     
-     socket.emit("chatMessage", msg)*/
-
   return (
     <div className="Start">
         <form>
-            <input onChange={(event) => getUsername(event.target.value)}placeholder="Username"></input>
-            <input onChange={(event) => getRoom(event.target.value)}placeholder="Room"></input>
+            <input onChange={(event) => setUsername(event.target.value)}placeholder="Username"></input>
+            <input onChange={(event) => setRoom(event.target.value)}placeholder="Room"></input>
             <Link to={`/${room}`}><button onClick={askToJoinRoom}>Create room</button></Link>
         </form>
         {rooms.map((room, index) => (

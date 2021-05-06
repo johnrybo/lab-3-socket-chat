@@ -1,19 +1,21 @@
 import "./App.css";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import { ChatContext } from './context'
+// import { ChatContext } from './context';
+import { useSocket } from './context';
 
 const Chat = (props) => {
   
-  const { username } = useContext(ChatContext)
+  // const { username } = useContext(ChatContext)
   const { roomId } = props.match.params;
+  const { socketRef } = useSocket()
 
   // const [clientID, setClientId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
   // https://dmitripavlutin.com/react-useref-guide/
-  const socketRef = useRef();
+  // const socketRef = useRef();
 
   // https://dmitripavlutin.com/react-useeffect-explanation/
   useEffect(() => {
@@ -29,7 +31,7 @@ const Chat = (props) => {
       setMessages((oldMessages) => [...oldMessages, message]);
     });
 
-  }, [roomId]);
+  }, [roomId, socketRef]);
 
   // Skickar det som skrivs i textfältet
   function sendMessage(e) {
