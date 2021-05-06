@@ -1,3 +1,4 @@
+* Göra ett anrop till socket från context
 * Lista rum när dessa skapas i server.js
 * Kom åt dessa i start.js
 * Ta bort rum från listan när ingen är kvar

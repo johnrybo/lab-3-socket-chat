@@ -25,10 +25,11 @@ io.on("connection", socket => {
     socket.emit("client id", socket.id);
 
     // Välkomnar den anslutna användaren
-    socket.emit("welcome-message", "Welcome");
+    socket.emit("message", `Welcome to this chat, ${socket.id}`);
+    console.log("Welcome to this chat")
   
     // Skickar till alla förutom användaren som ansluter
-    socket.broadcast.emit("user-connected", socket.id);
+    socket.broadcast.emit("message", `${socket.id} joined this chat!`);
 
     // Körs när en client lämnar
     // socket.on("disconnect", () => {
@@ -53,7 +54,7 @@ io.on("connection", socket => {
 
       console.log("Rooms: ", io.sockets.adapter.rooms)
 
-      socket.to(data.room).emit('joined-room', `a user just joined ${socket.id}`)
+      //socket.to(data.room).emit('joined-room', `a user just joined ${socket.id}`)
 
       // i join room
   })

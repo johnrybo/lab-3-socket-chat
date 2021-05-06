@@ -24,6 +24,14 @@ function Start() {
     joinRoom(room)
   }
 
+    /*  chatForm.addEventlistenter('submit', e => {
+      e.preventDefault();
+
+      const msg = e.target.elements.msg.value;
+     }) 
+     
+     socket.emit("chatMessage", msg)*/
+
   return (
     <div className="Start">
         <form>
