@@ -32,6 +32,14 @@ const rooms = ['room1', 'room2']
         socketRef.current.emit("join-room", { name: username, room: room })
       }
 
+    /*  chatForm.addEventlistenter('submit', e => {
+      e.preventDefault();
+
+      const msg = e.target.elements.msg.value;
+     }) 
+     
+     socket.emit("chatMessage", msg)*/
+
   return (
     <div className="Start">
         <form>
