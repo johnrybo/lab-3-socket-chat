@@ -6,3 +6,4 @@
 * Skapa lösenord till ett rum och logga in med det
 
 * Proxy error i terminalen
+
