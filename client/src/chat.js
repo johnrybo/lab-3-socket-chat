@@ -4,40 +4,17 @@ import { ChatContext } from './context'
 
 const Chat = (props) => {
   
-  const { messages, handleNewMessage } = useContext(ChatContext)
-  // const { roomId } = props.match.params;
-
-  // const [clientID, setClientId] = useState("");
-  // const [messages, setMessages] = useState([]);
+  const { messages, sendMessage } = useContext(ChatContext)
   const [message, setMessage] = useState("");
 
-  // // https://dmitripavlutin.com/react-useref-guide/
-  // const socketRef = useRef();
-
-  // // https://dmitripavlutin.com/react-useeffect-explanation/
-  // useEffect(() => {
-
-  //   socketRef.current = io.connect("/", {
-  //     query: { roomId }
-  //   });
-
-  //   // Uppdaterar statet "messages" med ett nytt message när någon skickat ett meddelande
-  //   socketRef.current.on("message", (message) => {
-
-  //     // https://www.techiediaries.com/react-usestate-hook-update-array/
-  //     setMessages((oldMessages) => [...oldMessages, message]);
-  //   });
-
-  // }, [roomId]);
-
   // Skickar det som skrivs i textfältet
-  function sendMessage(e) {
+  function sendMessage2(e) {
     e.preventDefault();
 
     // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
 
-    handleNewMessage(message)
+    sendMessage(message)
     // socketRef.current.emit("send message", message);
   }
 
@@ -45,7 +22,6 @@ const Chat = (props) => {
   function handleChange(e) {
     setMessage(e.target.value);
   }
-
 
   return (
     <div className="App">
@@ -59,7 +35,7 @@ const Chat = (props) => {
           );
         })}
       </div>
-      <form id="form" onSubmit={sendMessage}>
+      <form id="form" onSubmit={sendMessage2}>
         <input
           id="input"
           value={message}

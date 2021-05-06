@@ -5,20 +5,16 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 // const cors = require('cors')
 
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
-})
+const io = new Server(server);
 
 const rooms = [];
 // app.use(cors());
 
 io.on("connection", socket => {
 
-    const { roomId } = socket.handshake.query;
-    socket.join(roomId)
+    // const { roomId } = socket.handshake.query;
+    // socket.join(roomId)
+    // console.log(roomId)
     // rooms.push(roomId)
     // console.log(rooms)
 
@@ -35,16 +31,16 @@ io.on("connection", socket => {
     socket.broadcast.emit("user-connected", socket.id);
 
     // Körs när en client lämnar
-    socket.on("disconnect", () => {
-      io.in(roomId).emit("message", `${socket.id} just left`);
-      console.log("user disconnected");
-    });
+    // socket.on("disconnect", () => {
+    //   io.in(roomId).emit("message", `${socket.id} just left`);
+    //   console.log("user disconnected");
+    // });
 
     // Listen for chat message
-    socket.on("send-message", message => {
+    socket.on("send-message", messageObject => {
         // Skickar meddelandet till alla inkl avsändaren
-        io.in(roomId).emit("message", socket.id + ': ' + message)
-        console.log(socket.id)
+        // console.log(socket.id)
+        io.in(messageObject.room).emit("message", socket.id + ': ' + messageObject.message)
     })
     
     // Join room
@@ -52,6 +48,7 @@ io.on("connection", socket => {
       
       socket.join(data.room)
       rooms.push(data.room)
+      console.log('data.room = ' + data.room)
       console.log(rooms)
 
       console.log("Rooms: ", io.sockets.adapter.rooms)

@@ -1,21 +1,16 @@
 import { Component, createContext } from "react";
-import io from "socket.io-client";
+// import { io } from "socket.io-client";
+import { socket } from './socket';
 
 export const ChatContext = createContext({
   getUsername: () => {},
   joinRoom: () => {},
-  handleNewMessage: () => {}
+  handleNewMessage: () => {},
+  sendMessage: () => {}
 });
 
 class ChatProvider extends Component {
-  socket = io.connect("http://localhost:3000", {
-    transport: ["websocket"],
-    withCredentials: true,
-    extraHeaders: {
-      "my-custom-header": "abcd",
-    },
-  });
-
+  
   state = {
     username: undefined,
     room: undefined,
@@ -24,11 +19,11 @@ class ChatProvider extends Component {
   };
 
   componentDidMount() {
-    this.socket.on("connect", () => console.log("CONNECTED!"));
-    this.socket.on("rooms-list", this.updateRoomsList);
+    socket.on("connect", () => console.log('CONNECTED'));
+    socket.on("rooms-list", this.updateRoomsList);
     // this.socket.on("message", () => console.log('MESSAGE'));
-    this.socket.on("message", () => this.handleNewMessage);
-    this.socket.on("disconnect", () => console.log('DISCONNECT'));
+    socket.on("message", this.handleNewMessage);
+    socket.on("disconnect", () => console.log('DISCONNECT'));
     // this.socket.on('rooms-list', this.updateRoomsList);
     // this.socket.on('rooms-list', this.updateRoomsList);
     // this.socket.on('rooms-list', this.updateRoomsList);
@@ -45,14 +40,18 @@ class ChatProvider extends Component {
 
   joinRoom = (room) => {
     this.setState({ room });
-    this.socket.emit("join-room", { name: this.state.username, room });
+    socket.emit("join-room", { name: this.state.username, room });
   };
 
+  // skicka med username också
+  sendMessage = (message) => {
+    socket.emit("send-message", { message, room: this.state.room });
+  }
+
   handleNewMessage = (message) => {
+    console.log(message)
     this.setState({ messages: [...this.state.messages, message] });
     // this.socket.emit("message", message);
-    this.socket.emit("send-message", message);
-    console.log(message)
   };
 
 
@@ -85,6 +84,7 @@ class ChatProvider extends Component {
           getUsername: this.getUsername,
           joinRoom: this.joinRoom,
           handleNewMessage: this.handleNewMessage,
+          sendMessage: this.sendMessage
         }}
       >
         {this.props.children}
