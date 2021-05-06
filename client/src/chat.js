@@ -1,36 +1,24 @@
 import "./App.css";
-import React, { useState, useEffect, useRef, useContext } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect, useContext } from "react";
 import { ChatContext } from './context'
 
 const Chat = (props) => {
   
-  const { username } = useContext(ChatContext)
-  const { roomId } = props.match.params;
+  const { ioConnection, room, setRoom } = useContext(ChatContext)
 
-  // const [clientID, setClientId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
-  // https://dmitripavlutin.com/react-useref-guide/
-  const socketRef = useRef();
-
-  // https://dmitripavlutin.com/react-useeffect-explanation/
   useEffect(() => {
 
-    socketRef.current = io.connect("/", {
-      query: { roomId }
-    });
-
+    setRoom(props.match.params)
     // Uppdaterar statet "messages" med ett nytt message när någon skickat ett meddelande
-    socketRef.current.on("message", (message) => {
+    ioConnection.on("message", (message) => {
 
-      // https://www.techiediaries.com/react-usestate-hook-update-array/
-      setMessages((oldMessages) => [...oldMessages, message]);
-    });
-
-  }, [roomId]);
-
+    setMessages((oldMessages) => [...oldMessages, message]);
+});  
+});
+    
   // Skickar det som skrivs i textfältet
   function sendMessage(e) {
     e.preventDefault();
@@ -38,7 +26,7 @@ const Chat = (props) => {
     // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
     
-    socketRef.current.emit("send message", message);
+    ioConnection.emit("send message", message);
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
@@ -46,6 +34,9 @@ const Chat = (props) => {
     setMessage(e.target.value);
   }
 
+  if(!ioConnection) {
+      return <></>
+  } 
 
   return (
     <div className="App">

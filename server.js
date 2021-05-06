@@ -21,11 +21,11 @@ io.on("connection", socket => {
     socket.emit("client id", socket.id);
 
     // Välkomnar den anslutna användaren
-    socket.emit("message", `Welcome to this chat, ${socket.id}`);
+    socket.emit("welcome-message", `Welcome to this chat, ${socket.id}`);
     console.log("Welcome to this chat")
   
     // Skickar till alla förutom användaren som ansluter
-    socket.broadcast.emit("message", `${socket.id} joined this chat!`);
+    socket.broadcast.emit("joined-message", `${socket.id} joined this chat!`);
 
     // Körs när en client lämnar
     socket.on("disconnect", () => {

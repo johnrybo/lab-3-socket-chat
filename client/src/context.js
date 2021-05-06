@@ -1,22 +1,34 @@
 import { Component, createContext } from "react";
+import io from "socket.io-client";
+
 
 export const ChatContext = createContext({
     getUsername: () => {},
-    getRoom: () => {}
+    setRoom: () => {},
+    // ioConnection
 });
 
 class ChatProvider extends Component {
   state = {
     username: undefined,
-    room: undefined
+    room: undefined,
+    ioConnection: undefined
   };
+
+  
+  componentDidMount() {
+      // ioConnection = io.connect("/");
+      this.setState({ioConnection: io.connect("/", {
+        query: this.state.room 
+      })}, () => {console.log("connected")})
+  }
 
   getUsername = (username) => {
       this.setState({ username })
   }
 
   
-  getRoom = (room) => {
+  setRoom = (room) => {
     this.setState({ room })
 
   }
@@ -27,7 +39,7 @@ class ChatProvider extends Component {
         value={{
           ...this.state,
           getUsername: this.getUsername,
-          getRoom: this.getRoom
+          setRoom: this.setRoom
         }}
       >
         {this.props.children}
