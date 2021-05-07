@@ -5,43 +5,32 @@ import { Link } from "react-router-dom";
 
 function Start() {
 
-  const { rooms, getUsername, joinRoom } = useContext(ChatContext)
-  const [room, setRoom] = useState("");
+  const { room, getUsername, createRoom, setPassword, setRoom } = useContext(ChatContext)
 
-//  function listRooms(rooms) {
-//   if(rooms) {
-//     return (
-//         rooms.map((room, index) => (
-//           <Link key={index} to={`/${room}`}><button>Join {room}</button></Link>
-//       )) 
-//       )
-//     }
-//   }
+  const [checked, setChecked] = useState(false);
 
-  function askToJoinRoom() {
-    // e.preventDefault();
-    console.log(room)
-    joinRoom(room)
+  function askToCreateRoom() {
+    createRoom(room)
   }
 
-    /*  chatForm.addEventlistenter('submit', e => {
-      e.preventDefault();
-
-      const msg = e.target.elements.msg.value;
-     }) 
-     
-     socket.emit("chatMessage", msg)*/
 
   return (
     <div className="Start">
         <form>
             <input onChange={(event) => getUsername(event.target.value)}placeholder="Username"></input>
             <input onChange={(event) => setRoom(event.target.value)}placeholder="Room"></input>
-            <Link to={`/${room}`}><button onClick={askToJoinRoom}>Create room</button></Link>
-        </form>
-        {rooms.map((room, index) => (
-          <Link key={index} to={`/${room}`}><button>Join {room}</button></Link>
-          ))} 
+
+            <label htmlFor="checkbox">Private room?</label>
+            <input 
+              id="checkbox" 
+              type="checkbox" 
+              name="Private room" 
+              value="Private room" onChange={() => setChecked(!checked)}></input>
+
+            {checked ? <input onChange={(event) => setPassword(event.target.value)}placeholder="Password"></input> : null}
+
+            <Link to={`/${room.name}`}><button onClick={askToCreateRoom}>Create room</button></Link>
+        </form>      
     </div>
   )
 }

@@ -1,80 +1,98 @@
 import { Component, createContext } from "react";
+
 // import { io } from "socket.io-client";
-import { socket } from './socket';
+import { socket } from "./socket";
 
 export const ChatContext = createContext({
   getUsername: () => {},
-  joinRoom: () => {},
+  createRoom: () => {},
   handleNewMessage: () => {},
-  sendMessage: () => {}
+  sendMessage: () => {},
+  setPassword: () => {},
+  joinRoom: () => {}
 });
 
 class ChatProvider extends Component {
-  
   state = {
     username: undefined,
-    room: undefined,
+    password: undefined,
+    room: {
+      name: undefined,
+      password: undefined,
+    },
     rooms: [],
-    messages: []
+    messages: [],
   };
 
   componentDidMount() {
-    socket.on("connect", () => console.log('CONNECTED'));
+    socket.on("connect", () => console.log("CONNECTED"));
     socket.on("rooms-list", this.updateRoomsList);
     // this.socket.on("message", () => console.log('MESSAGE'));
     socket.on("message", this.handleNewMessage);
-    socket.on("disconnect", () => console.log('DISCONNECT'));
-    // this.socket.on('rooms-list', this.updateRoomsList);
-    // this.socket.on('rooms-list', this.updateRoomsList);
-    // this.socket.on('rooms-list', this.updateRoomsList);
-    // this.socket.on('rooms-list', this.updateRoomsList);
+    socket.on("disconnect", () => console.log("DISCONNECT"));
+    socket.on("allRooms", this.updateRoomsList);
+    // socket.on("leave-room", this.onLeaveRoom);
   }
 
-  updateRoomsList(rooms) {
-    this.setState({ rooms });
-  };
+  updateRoomsList = (room) => {
+
+    if (this.state.rooms) {
+      this.setState({ rooms: [...this.state.rooms, room] });
+    }
+    
+  }
 
   getUsername = (username) => {
     this.setState({ username });
   };
 
+  setRoom = (name) => {
+    this.setState((prevState) => ({
+      room: {
+        ...prevState.room,
+        name: name,
+      },
+    }));
+  };
+
+  setPassword = (password) => {
+    this.setState((prevState) => ({
+      room: {
+        ...prevState.room,
+        password: password,
+      },
+    }));
+  };
+
   joinRoom = (room) => {
     this.setState({ room });
     socket.emit("join-room", { name: this.state.username, room });
+    console.log(this.state.room)
+    this.setState({ messages: [] });
+  }
+
+  createRoom = (room) => {
+    this.setState({ room });
+    socket.emit("create-room", { name: this.state.username, room });
+    console.log(this.state.room);
+    this.updateRoomsList(this.state.room);
+    this.setState({ messages: [] });
   };
 
   // skicka med username också
   sendMessage = (message) => {
-    socket.emit("send-message", { message, room: this.state.room });
-  }
+    socket.emit("send-message", {
+      message,
+      username: this.state.username,
+      room: this.state.room.name,
+    });
+  };
 
   handleNewMessage = (message) => {
-    console.log(message)
+    console.log(message);
     this.setState({ messages: [...this.state.messages, message] });
     // this.socket.emit("message", message);
   };
-
-
-  //////////////////////////////////////////////////////////////////////////////
-  /* 
-  socketRef.current.on("message", (message) => {
-
-    // https://www.techiediaries.com/react-usestate-hook-update-array/
-    setMessages((oldMessages) => [...oldMessages, message]);
-  });
-
-}, [roomId]);
-
-  function sendMessage(e) {
-    e.preventDefault();
-
-    // Tömmer textfältet när man skickat ett meddelande
-    setMessage("");
-    
-    socketRef.current.emit("send message", message);
-  } */
-  
-  //////////////////////////////////////////////////////////////////////////////
 
   render() {
     return (
@@ -82,9 +100,12 @@ class ChatProvider extends Component {
         value={{
           ...this.state,
           getUsername: this.getUsername,
-          joinRoom: this.joinRoom,
+          createRoom: this.createRoom,
           handleNewMessage: this.handleNewMessage,
-          sendMessage: this.sendMessage
+          sendMessage: this.sendMessage,
+          setPassword: this.setPassword,
+          setRoom: this.setRoom,
+          joinRoom: this.joinRoom
         }}
       >
         {this.props.children}
