@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 
 function Start() {
 
-  const { room, getUsername, createRoom, setPassword, setRoom } = useContext(ChatContext)
+  const { room, getUsername, joinRoom, setPassword, setRoom } = useContext(ChatContext)
 
   const [checked, setChecked] = useState(false);
 
   function askToCreateRoom() {
-    createRoom(room)
+    joinRoom(room)
   }
 
 

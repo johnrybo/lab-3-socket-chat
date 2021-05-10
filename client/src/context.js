@@ -9,10 +9,12 @@ export const ChatContext = createContext({
   handleNewMessage: () => {},
   sendMessage: () => {},
   setPassword: () => {},
-  joinRoom: () => {}
+  joinRoom: () => {},
+  joinLockedRoom: () => {},
 });
 
 class ChatProvider extends Component {
+  
   state = {
     username: undefined,
     password: undefined,
@@ -26,21 +28,18 @@ class ChatProvider extends Component {
 
   componentDidMount() {
     socket.on("connect", () => console.log("CONNECTED"));
-    socket.on("rooms-list", this.updateRoomsList);
+    // socket.on("rooms-list", this.updateRoomsList);
     // this.socket.on("message", () => console.log('MESSAGE'));
     socket.on("message", this.handleNewMessage);
-    socket.on("disconnect", () => console.log("DISCONNECT"));
-    socket.on("allRooms", this.updateRoomsList);
-    // socket.on("leave-room", this.onLeaveRoom);
+   // socket.on("leave-room", this.updateRoomsList);
+    socket.on("all-rooms", this.updateRoomsList);
+    socket.on("disconnect", () => console.log('DISCONNECTED'));
   }
 
-  updateRoomsList = (room) => {
-
-    if (this.state.rooms) {
-      this.setState({ rooms: [...this.state.rooms, room] });
-    }
-    
-  }
+  updateRoomsList = (rooms) => {
+    console.log(rooms);
+    this.setState({ rooms });
+  };
 
   getUsername = (username) => {
     this.setState({ username });
@@ -66,17 +65,21 @@ class ChatProvider extends Component {
 
   joinRoom = (room) => {
     this.setState({ room });
+    console.log(room);
     socket.emit("join-room", { name: this.state.username, room });
-    console.log(this.state.room)
     this.setState({ messages: [] });
-  }
+    this.updateRoomsList(this.state.rooms);
+  };
 
-  createRoom = (room) => {
-    this.setState({ room });
-    socket.emit("create-room", { name: this.state.username, room });
-    console.log(this.state.room);
-    this.updateRoomsList(this.state.room);
-    this.setState({ messages: [] });
+  joinLockedRoom = (room) => {
+    const passwordPrompt = prompt("Lösen tack!");
+
+    if (passwordPrompt === room.password) {
+      this.joinRoom(room.name)
+      console.log('korrekt')
+    } else {
+      prompt("fel lösen")
+    }
   };
 
   // skicka med username också
@@ -100,12 +103,12 @@ class ChatProvider extends Component {
         value={{
           ...this.state,
           getUsername: this.getUsername,
-          createRoom: this.createRoom,
           handleNewMessage: this.handleNewMessage,
           sendMessage: this.sendMessage,
           setPassword: this.setPassword,
           setRoom: this.setRoom,
-          joinRoom: this.joinRoom
+          joinRoom: this.joinRoom,
+          joinLockedRoom: this.joinLockedRoom
         }}
       >
         {this.props.children}

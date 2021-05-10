@@ -3,6 +3,7 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+
 // const cors = require('cors')
 
 const io = new Server(server);
@@ -11,11 +12,10 @@ const rooms = [];
 // app.use(cors());
 
 io.on("connection", (socket) => {
-  // io.to(socket.id).emit("allRooms", getAllRooms());
-
   console.log("Client was connected: ", socket.id);
 
   socket.emit("client id", socket.id);
+  socket.emit("all-rooms", getAllRooms());
 
   // Körs när en client lämnar
   // socket.on("disconnect", () => {
@@ -33,19 +33,29 @@ io.on("connection", (socket) => {
     );
   });
 
-  // Create room
-  socket.on("create-room", (data) => {
+  // Join room
+  socket.on("join-room", (data) => {
+    // leaveall...
     socket.leaveAll();
+    socket.emit("all-rooms", getAllRooms());
+
+    // if the room does not exist, store it as a created room
+
+    if (data.room.name) {
+      let room = rooms.find((room) => room.name == data.room.name);
+
+      if (!room) {
+        rooms.push(data.room);
+      }
+    }
+
+    // Return if no room was sent from the client
+    if (!data.room) return;
+
     socket.join(data.room.name),
       () => {
-        io.emit("allRooms", getAllRooms());
+        socket.emit("all-rooms", getAllRooms());
       };
-
-    rooms.push(data.room);
-    console.log(rooms);
-
-    console.log("data.room = " + data.room.name + " " + data.room.password);
-    console.log("Rooms: ", io.sockets.adapter.rooms);
 
     // Välkomnar den anslutna användaren
     socket
@@ -58,40 +68,12 @@ io.on("connection", (socket) => {
       .in(data.room.name)
       .emit("message", `${data.name} joined this chat!`);
 
-    //socket.to(data.room).emit('joined-room', `a user just joined ${socket.id}`)
+    socket.on("disconnect", () => {
+      console.log("User disconnected");
 
-    // i join room
+  
+    });
   });
-
-  // Join room
-  socket.on("join-room", (data) => {
-    // leaveall...
-    socket.leaveAll();
-
-    // let roomIndex = rooms.findIndex((room) => {
-    //   return room.name == data.room.name;
-    // });
-
-    if (data.room) {
-      socket.join(data.room.name),
-        () => {
-          io.emit("allRooms", getAllRooms());
-        };
-
-      // Välkomnar den anslutna användaren
-      socket
-        .in(data.room.name)
-        .emit("message", `Welcome to this chat, ${data.name}`);
-      console.log("Welcome to this chat");
-
-      // Skickar till alla förutom användaren som ansluter
-      socket.broadcast
-      .in(data.room.name)
-        .emit("message", `${data.name} joined this chat!`);
-    }
-  });
-
-  // i connection
 });
 
 // emit on "join-room", "connection", "disconnected"
