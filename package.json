@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/johnrybo/lab-3-socket-chat#readme",
   "dependencies": {
-    "@material-ui/icons": "^4.11.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "nodemon": "^2.0.7",

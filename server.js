@@ -3,13 +3,9 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-
-// const cors = require('cors')
-
 const io = new Server(server);
 
 const rooms = [];
-// app.use(cors());
 
 io.on("connection", (socket) => {
   console.log("Client was connected: ", socket.id);
@@ -17,16 +13,9 @@ io.on("connection", (socket) => {
   socket.emit("client id", socket.id);
   socket.emit("all-rooms", getAllRooms());
 
-  // Körs när en client lämnar
-  // socket.on("disconnect", () => {
-  //   io.in(roomId).emit("message", `${socket.id} just left`);
-  //   console.log("user disconnected");
-  // });
-
   // Listen for chat message
   socket.on("send-message", (messageObject) => {
     // Skickar meddelandet till alla inkl avsändaren
-    // console.log(socket.id)
     io.in(messageObject.room).emit(
       "message",
       messageObject.username + ": " + messageObject.message
@@ -57,6 +46,12 @@ io.on("connection", (socket) => {
         socket.emit("all-rooms", getAllRooms());
       };
 
+    console.log(
+      "clients in room after connect: " +
+        io.sockets.adapter.rooms.get(data.room.name).size
+    );
+    socket.removeAllListeners("message");
+
     // Välkomnar den anslutna användaren
     socket
       .in(data.room.name)
@@ -64,21 +59,23 @@ io.on("connection", (socket) => {
     console.log("Welcome to this chat");
 
     // Skickar till alla förutom användaren som ansluter
-    socket.broadcast
-      .in(data.room.name)
-      .emit("message", `${data.name} joined this chat!`);
+    socket.to(data.room.name).emit("message", `${data.name} joined this chat!`);
 
     socket.on("disconnect", () => {
       console.log("User disconnected");
 
-  
+      if (io.sockets.adapter.rooms.get(data.room.name) === undefined) {
+        let roomIndex = rooms.findIndex((room) => room.name == data.room.name);
+        rooms.splice(roomIndex, 1);
+        socket.emit("all-rooms", getAllRooms());
+      } else {
+        console.log(io.sockets.adapter.rooms.get(data.room.name).size);
+      }
     });
   });
 });
 
-// emit on "join-room", "connection", "disconnected"
 function getAllRooms() {
-  // io.sockets.adapter.rooms
   return rooms;
 }
 

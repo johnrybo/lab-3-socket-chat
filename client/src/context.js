@@ -1,7 +1,6 @@
 import { Component, createContext } from "react";
-
-// import { io } from "socket.io-client";
 import { socket } from "./socket";
+import { withRouter } from "react-router-dom";
 
 export const ChatContext = createContext({
   getUsername: () => {},
@@ -9,12 +8,13 @@ export const ChatContext = createContext({
   handleNewMessage: () => {},
   sendMessage: () => {},
   setPassword: () => {},
+  setRoom: () => {},
   joinRoom: () => {},
   joinLockedRoom: () => {},
+  resetRoom: () => {},
 });
 
 class ChatProvider extends Component {
-  
   state = {
     username: undefined,
     password: undefined,
@@ -28,12 +28,9 @@ class ChatProvider extends Component {
 
   componentDidMount() {
     socket.on("connect", () => console.log("CONNECTED"));
-    // socket.on("rooms-list", this.updateRoomsList);
-    // this.socket.on("message", () => console.log('MESSAGE'));
     socket.on("message", this.handleNewMessage);
-   // socket.on("leave-room", this.updateRoomsList);
     socket.on("all-rooms", this.updateRoomsList);
-    socket.on("disconnect", () => console.log('DISCONNECTED'));
+    socket.on("disconnect", () => console.log("DISCONNECTED"));
   }
 
   updateRoomsList = (rooms) => {
@@ -45,13 +42,13 @@ class ChatProvider extends Component {
     this.setState({ username });
   };
 
+  // Kanske fixa till denna
+  resetRoom = (room) => {
+    this.setState({ room });
+  };
+
   setRoom = (name) => {
-    this.setState((prevState) => ({
-      room: {
-        ...prevState.room,
-        name: name,
-      },
-    }));
+    this.setState({ room: { ...this.state.room, name } });
   };
 
   setPassword = (password) => {
@@ -68,17 +65,17 @@ class ChatProvider extends Component {
     console.log(room);
     socket.emit("join-room", { name: this.state.username, room });
     this.setState({ messages: [] });
-    this.updateRoomsList(this.state.rooms);
+    this.props.history.push("/" + room.name);
   };
 
   joinLockedRoom = (room) => {
     const passwordPrompt = prompt("Lösen tack!");
 
     if (passwordPrompt === room.password) {
-      this.joinRoom(room.name)
-      console.log('korrekt')
+      console.log("Korrekt");
+      this.joinRoom(room);
     } else {
-      prompt("fel lösen")
+      alert("Fel lösen");
     }
   };
 
@@ -94,7 +91,6 @@ class ChatProvider extends Component {
   handleNewMessage = (message) => {
     console.log(message);
     this.setState({ messages: [...this.state.messages, message] });
-    // this.socket.emit("message", message);
   };
 
   render() {
@@ -108,7 +104,8 @@ class ChatProvider extends Component {
           setPassword: this.setPassword,
           setRoom: this.setRoom,
           joinRoom: this.joinRoom,
-          joinLockedRoom: this.joinLockedRoom
+          joinLockedRoom: this.joinLockedRoom,
+          resetRoom: this.resetRoom,
         }}
       >
         {this.props.children}
@@ -117,4 +114,4 @@ class ChatProvider extends Component {
   }
 }
 
-export default ChatProvider;
+export default withRouter(ChatProvider);

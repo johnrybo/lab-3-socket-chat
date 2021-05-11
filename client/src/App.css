@@ -1,13 +1,5 @@
-/* body {
-  height: 100vh;
-  margin: 0;
-  padding-bottom: 3rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-} */
-
 #form {
-  background: rgba(0, 0, 0, 0.15);
+  background: #3f51b5;
   padding: 0.25rem;
   position: fixed;
   bottom: 0;
@@ -29,7 +21,7 @@
   outline: none;
 }
 #form > button {
-  background: #333;
+  background: #f50057;
   border: none;
   padding: 0 1rem;
   margin: 0.25rem;
@@ -45,16 +37,16 @@
 #messages > div {
   padding: 0.5rem 1rem;
 }
-#messages > div:nth-child(odd) {
-  background: #efefef;
+#messages > div:nth-child(even) {
+  background: aliceblue;
 }
 
-.App {
-  height: 100vh;
+.Chat {
+  height: 90vh;
 }
 
 .Start {
-  height: 100%;
+  height: 90vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -62,13 +54,10 @@
   flex-direction: column;
 }
 
-.Start form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.Start > * {
+  margin: .5rem;
 }
 
-.Start form > * {
+.Start div > * {
   margin: .5rem;
-} 
+}

@@ -1,21 +1,18 @@
 import "./App.css";
 import React, { useState, useContext } from "react";
-import { ChatContext } from './context'
+import { ChatContext } from "./context";
 
-const Chat = (props) => {
-  
-  const { messages, sendMessage } = useContext(ChatContext)
+const Chat = () => {
+  const { messages, sendMessage } = useContext(ChatContext);
   const [message, setMessage] = useState("");
 
   // Skickar det som skrivs i textfältet
-  function sendMessage2(e) {
+  function prepareToSendMessage(e) {
     e.preventDefault();
 
     // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
-
-    sendMessage(message)
-    // socketRef.current.emit("send message", message);
+    sendMessage(message);
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
@@ -24,18 +21,17 @@ const Chat = (props) => {
   }
 
   return (
-    <div className="App">
+    <div className="Chat">
       <div id="messages">
         {messages.map((message, index) => {
           return (
             <div key={index}>
-              {/* <div>{clientID}</div> */}
               <div>{message}</div>
             </div>
           );
         })}
       </div>
-      <form id="form" onSubmit={sendMessage2}>
+      <form id="form" onSubmit={prepareToSendMessage}>
         <input
           id="input"
           value={message}
@@ -46,8 +42,6 @@ const Chat = (props) => {
       </form>
     </div>
   );
-}
+};
 
 export default Chat;
-
-// https://www.youtube.com/watch?v=E4V6nbP_NoQ

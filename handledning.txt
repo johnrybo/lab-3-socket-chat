@@ -8,13 +8,13 @@ Krav för godkänt:
 /// 7. Projektmappen innehåller en README.md fil (läs ovan för mer info)
 8. Uppgiften lämnas in i tid!
 
+---
 
-* Göra ett anrop till socket från context
-* Lista rum när dessa skapas i server.js
-* Kom åt dessa i start.js
-* Ta bort rum från listan när ingen är kvar
+Lite buggar:
 
-KLAR Få in användarnamn istället för socket.id
-KLAR* Skapa lösenord till ett rum och logga in med det
-
-KLAR* Proxy error i terminalen
+- Knappar för att joina rum dyker upp först efter att man laddat om sidan
+- Om man laddar om sidan inne i en chat är man kvar i chatten men 
+  har egentligen lämnat rummet och kan inte skriva / se nya meddelanden
+- Användarnamn kan lämnas tomt innan man joinar ett rum
+- Lösenord ligger kvar (kanske??) ibland när man skapar nytt rum utan lösenord
+  om det senast skapade var låst
