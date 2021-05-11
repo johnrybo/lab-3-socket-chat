@@ -1,9 +1,9 @@
 import "./App.css";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { ChatContext } from "./context";
 import { Link } from "react-router-dom";
 import LockIcon from "@material-ui/icons/Lock";
-import { TextField, Button } from "@material-ui/core/";
+import { Button } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,19 +28,17 @@ const useStyles = makeStyles((theme) => ({
 const Aside = () => {
   const classes = useStyles();
 
-  const { rooms, joinRoom, joinLockedRoom, getUsername, resetRoom } =
+  const { rooms, joinRoom, joinLockedRoom, resetRoom } =
     useContext(ChatContext);
 
-  const [changedUsername, setChangedUsername] = useState("");
-
   const emptyRoom = {
-    name: undefined,
-    password: undefined,
+    name: "",
+    password: "",
   };
 
   return (
     <div className={classes.container}>
-      <Link className={classes.link} to={"/"}>
+      {/* <a href="/" className={classes.link}>
         <Button
           className={classes.button}
           variant="contained"
@@ -49,21 +47,17 @@ const Aside = () => {
         >
           Start
         </Button>
+      </a> */}
+      <Link to="/" className={classes.link}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={() => resetRoom(emptyRoom)}
+        >
+          Rooms
+        </Button>
       </Link>
-      <TextField
-        className={classes.textField}
-        variant="outlined"
-        label="Username"
-        onChange={(event) => setChangedUsername(event.target.value)}
-      />
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="primary"
-        onClick={() => getUsername(changedUsername)}
-      >
-        Change username
-      </Button>
 
       {rooms.map((room, index) =>
         !room.password ? (

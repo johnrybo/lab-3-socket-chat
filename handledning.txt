@@ -15,6 +15,5 @@ Lite buggar:
 - Knappar för att joina rum dyker upp först efter att man laddat om sidan
 - Om man laddar om sidan inne i en chat är man kvar i chatten men 
   har egentligen lämnat rummet och kan inte skriva / se nya meddelanden
-- Användarnamn kan lämnas tomt innan man joinar ett rum
-- Lösenord ligger kvar (kanske??) ibland när man skapar nytt rum utan lösenord
-  om det senast skapade var låst
+- Man lämnar / disconnectar inte från ett rum om man går in i ett annat, bara
+  om man laddar om sidan

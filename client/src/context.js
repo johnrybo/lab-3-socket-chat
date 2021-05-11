@@ -16,11 +16,10 @@ export const ChatContext = createContext({
 
 class ChatProvider extends Component {
   state = {
-    username: undefined,
-    password: undefined,
+    username: "",
     room: {
-      name: undefined,
-      password: undefined,
+      name: "",
+      password: "",
     },
     rooms: [],
     messages: [],
@@ -30,11 +29,12 @@ class ChatProvider extends Component {
     socket.on("connect", () => console.log("CONNECTED"));
     socket.on("message", this.handleNewMessage);
     socket.on("all-rooms", this.updateRoomsList);
+    // socket.on("rooms", this.handleNewRoom);
     socket.on("disconnect", () => console.log("DISCONNECTED"));
   }
 
   updateRoomsList = (rooms) => {
-    console.log(rooms);
+    // console.log(rooms);
     this.setState({ rooms });
   };
 
@@ -62,17 +62,20 @@ class ChatProvider extends Component {
 
   joinRoom = (room) => {
     this.setState({ room });
-    console.log(room);
     socket.emit("join-room", { name: this.state.username, room });
+
+    // if (!this.state.rooms.includes(room)) {
+    //   this.setState({ rooms: [...this.state.rooms, room] });
+    // }
+    
     this.setState({ messages: [] });
+    console.log(this.state.rooms);
     this.props.history.push("/" + room.name);
   };
 
   joinLockedRoom = (room) => {
     const passwordPrompt = prompt("Lösen tack!");
-
     if (passwordPrompt === room.password) {
-      console.log("Korrekt");
       this.joinRoom(room);
     } else {
       alert("Fel lösen");

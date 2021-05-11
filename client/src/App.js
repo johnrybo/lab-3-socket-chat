@@ -1,8 +1,8 @@
 import "./App.css";
-import Start from "./start";
+// import Start from "./start";
 import Chat from "./chat";
-import Aside from "./aside";
 import React from "react";
+import Rooms from './rooms'
 
 import ChatProvider from "./context";
 
@@ -12,9 +12,9 @@ function App() {
   return (
     <ChatProvider>
       <div className="App">
-        <Aside />
         <Switch>
-          <Route exact path="/" component={Start} />
+          {/* <Route exact path="/" component={Start} /> */}
+          <Route exact path="/" component={Rooms} />
           <Route exact path="/:roomName" component={Chat} />
         </Switch>
       </div>

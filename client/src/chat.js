@@ -1,4 +1,5 @@
 import "./App.css";
+import Aside from "./aside";
 import React, { useState, useContext } from "react";
 import { ChatContext } from "./context";
 
@@ -22,6 +23,7 @@ const Chat = () => {
 
   return (
     <div className="Chat">
+      <Aside />
       <div id="messages">
         {messages.map((message, index) => {
           return (

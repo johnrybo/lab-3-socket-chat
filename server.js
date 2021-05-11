@@ -7,9 +7,10 @@ const io = new Server(server);
 
 const rooms = [];
 
+// CONNECT
 io.on("connection", (socket) => {
+  
   console.log("Client was connected: ", socket.id);
-
   socket.emit("client id", socket.id);
   socket.emit("all-rooms", getAllRooms());
 
@@ -22,9 +23,12 @@ io.on("connection", (socket) => {
     );
   });
 
-  // Join room
+  socket.on("add-room", (room) => {
+    io.emit("rooms", room)
+  });
+
+  // JOIN ROOM
   socket.on("join-room", (data) => {
-    // leaveall...
     socket.leaveAll();
     socket.emit("all-rooms", getAllRooms());
 
@@ -43,6 +47,7 @@ io.on("connection", (socket) => {
 
     socket.join(data.room.name),
       () => {
+        socket.leaveAll();
         socket.emit("all-rooms", getAllRooms());
       };
 
@@ -61,8 +66,13 @@ io.on("connection", (socket) => {
     // Skickar till alla förutom användaren som ansluter
     socket.to(data.room.name).emit("message", `${data.name} joined this chat!`);
 
+    // DISCONNECT
     socket.on("disconnect", () => {
       console.log("User disconnected");
+
+      socket
+      .in(data.room.name)
+      .emit("message", `${data.name} left this chat :(`);
 
       if (io.sockets.adapter.rooms.get(data.room.name) === undefined) {
         let roomIndex = rooms.findIndex((room) => room.name == data.room.name);
@@ -70,6 +80,7 @@ io.on("connection", (socket) => {
         socket.emit("all-rooms", getAllRooms());
       } else {
         console.log(io.sockets.adapter.rooms.get(data.room.name).size);
+        console.log(io.sockets.adapter.rooms.get(data.room.name));
       }
     });
   });
