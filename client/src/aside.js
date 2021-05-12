@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useContext } from "react";
 import { ChatContext } from "./context";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import LockIcon from "@material-ui/icons/Lock";
 import { Button } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
@@ -38,17 +38,7 @@ const Aside = () => {
 
   return (
     <div className={classes.container}>
-      {/* <a href="/" className={classes.link}>
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={() => resetRoom(emptyRoom)}
-        >
-          Start
-        </Button>
-      </a> */}
-      <Link to="/" className={classes.link}>
+      <a href="/" className={classes.link}>
         <Button
           className={classes.button}
           variant="contained"
@@ -57,7 +47,7 @@ const Aside = () => {
         >
           Rooms
         </Button>
-      </Link>
+      </a>
 
       {rooms.map((room, index) =>
         !room.password ? (

@@ -15,5 +15,3 @@ Lite buggar:
 - Knappar för att joina rum dyker upp först efter att man laddat om sidan
 - Om man laddar om sidan inne i en chat är man kvar i chatten men 
   har egentligen lämnat rummet och kan inte skriva / se nya meddelanden
-- Man lämnar / disconnectar inte från ett rum om man går in i ett annat, bara
-  om man laddar om sidan

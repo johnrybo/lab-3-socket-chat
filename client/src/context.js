@@ -29,12 +29,10 @@ class ChatProvider extends Component {
     socket.on("connect", () => console.log("CONNECTED"));
     socket.on("message", this.handleNewMessage);
     socket.on("all-rooms", this.updateRoomsList);
-    // socket.on("rooms", this.handleNewRoom);
     socket.on("disconnect", () => console.log("DISCONNECTED"));
   }
 
   updateRoomsList = (rooms) => {
-    // console.log(rooms);
     this.setState({ rooms });
   };
 
@@ -63,11 +61,6 @@ class ChatProvider extends Component {
   joinRoom = (room) => {
     this.setState({ room });
     socket.emit("join-room", { name: this.state.username, room });
-
-    // if (!this.state.rooms.includes(room)) {
-    //   this.setState({ rooms: [...this.state.rooms, room] });
-    // }
-    
     this.setState({ messages: [] });
     console.log(this.state.rooms);
     this.props.history.push("/" + room.name);

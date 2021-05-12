@@ -9,10 +9,11 @@ const rooms = [];
 
 // CONNECT
 io.on("connection", (socket) => {
-  
+  // socket.removeAllListeners("send-message");
+  // socket.removeAllListeners("join-room");
+
   console.log("Client was connected: ", socket.id);
-  socket.emit("client id", socket.id);
-  socket.emit("all-rooms", getAllRooms());
+  io.emit("client id", socket.id);
 
   // Listen for chat message
   socket.on("send-message", (messageObject) => {
@@ -23,17 +24,11 @@ io.on("connection", (socket) => {
     );
   });
 
-  socket.on("add-room", (room) => {
-    io.emit("rooms", room)
-  });
-
   // JOIN ROOM
   socket.on("join-room", (data) => {
     socket.leaveAll();
-    socket.emit("all-rooms", getAllRooms());
 
     // if the room does not exist, store it as a created room
-
     if (data.room.name) {
       let room = rooms.find((room) => room.name == data.room.name);
 
@@ -45,17 +40,11 @@ io.on("connection", (socket) => {
     // Return if no room was sent from the client
     if (!data.room) return;
 
-    socket.join(data.room.name),
-      () => {
-        socket.leaveAll();
-        socket.emit("all-rooms", getAllRooms());
-      };
+    socket.join(data.room.name);
+    io.emit("all-rooms", getAllRooms());
 
-    console.log(
-      "clients in room after connect: " +
-        io.sockets.adapter.rooms.get(data.room.name).size
-    );
-    socket.removeAllListeners("message");
+    // Tar bort tomma rum
+    removeEmptyRooms();
 
     // Välkomnar den anslutna användaren
     socket
@@ -71,20 +60,25 @@ io.on("connection", (socket) => {
       console.log("User disconnected");
 
       socket
-      .in(data.room.name)
-      .emit("message", `${data.name} left this chat :(`);
+        .in(data.room.name)
+        .emit("message", `${data.name} left this chat :(`);
 
-      if (io.sockets.adapter.rooms.get(data.room.name) === undefined) {
-        let roomIndex = rooms.findIndex((room) => room.name == data.room.name);
-        rooms.splice(roomIndex, 1);
-        socket.emit("all-rooms", getAllRooms());
-      } else {
-        console.log(io.sockets.adapter.rooms.get(data.room.name).size);
-        console.log(io.sockets.adapter.rooms.get(data.room.name));
-      }
+      removeEmptyRooms();
     });
   });
+
+  io.emit("all-rooms", getAllRooms());
 });
+
+function removeEmptyRooms() {
+  for (const room of rooms) {
+    if (io.sockets.adapter.rooms.get(room.name) === undefined) {
+      let roomIndex = rooms.findIndex((room) => room.name == room.name);
+      rooms.splice(roomIndex, 1);
+      io.emit("all-rooms", getAllRooms());
+    }
+  }
+}
 
 function getAllRooms() {
   return rooms;

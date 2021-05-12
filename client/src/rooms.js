@@ -7,6 +7,7 @@ import {
   Button,
   FormControlLabel,
   Checkbox,
+  Typography,
 } from "@material-ui/core/";
 import LockIcon from "@material-ui/icons/Lock";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
   },
+  button: {
+    margin: "0.5rem",
+  },
+  text: {
+    margin: "0.5rem"
+  }
 }));
 
 function Rooms() {
@@ -87,7 +94,9 @@ function Rooms() {
         </Button>
       )}
 
-      {rooms.length > 0 ? <h3>Join existing rooms</h3> : null}
+      {rooms.length > 0 ? (
+        <Typography className={classes.text} variant="h6">Join existing rooms</Typography>
+      ) : null}
 
       {username.length > 0
         ? rooms.map((room, index) =>
