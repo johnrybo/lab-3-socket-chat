@@ -9,16 +9,27 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   container: {
     height: '10vh',
-    backgroundColor: 'aliceblue',
+    backgroundColor: '#3f51b5',
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 999
   },
   link: {
     textDecoration: "none",
   },
   button: {
     margin: "1rem",
+    backgroundColor: "aliceblue",
+    fontWeight: "bold"
+  },
+  button2: {
+    margin: "1rem",
+    fontWeight: "bold"
   },
   textField: {
     margin: "1rem",
@@ -42,7 +53,6 @@ const Aside = () => {
         <Button
           className={classes.button}
           variant="contained"
-          color="primary"
           onClick={() => resetRoom(emptyRoom)}
         >
           Rooms
@@ -52,7 +62,7 @@ const Aside = () => {
       {rooms.map((room, index) =>
         !room.password ? (
           <Button
-            className={classes.button}
+            className={classes.button2}
             variant="contained"
             color="secondary"
             key={index}
@@ -62,7 +72,7 @@ const Aside = () => {
           </Button>
         ) : (
           <Button
-            className={classes.button}
+            className={classes.button2}
             variant="contained"
             color="secondary"
             key={index}

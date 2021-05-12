@@ -12,11 +12,12 @@ export const ChatContext = createContext({
   joinRoom: () => {},
   joinLockedRoom: () => {},
   resetRoom: () => {},
+  onJoinLockedRoomResponse: () => {},
 });
 
 class ChatProvider extends Component {
   state = {
-    username: "",
+    username: "guest",
     room: {
       name: "",
       password: "",
@@ -30,6 +31,7 @@ class ChatProvider extends Component {
     socket.on("message", this.handleNewMessage);
     socket.on("all-rooms", this.updateRoomsList);
     socket.on("disconnect", () => console.log("DISCONNECTED"));
+    socket.on("join-locked-room-response", this.onJoinLockedRoomResponse);
   }
 
   updateRoomsList = (rooms) => {
@@ -59,19 +61,28 @@ class ChatProvider extends Component {
   };
 
   joinRoom = (room) => {
-    this.setState({ room });
     socket.emit("join-room", { name: this.state.username, room });
-    this.setState({ messages: [] });
-    console.log(this.state.rooms);
-    this.props.history.push("/" + room.name);
   };
 
   joinLockedRoom = (room) => {
-    const passwordPrompt = prompt("Lösen tack!");
-    if (passwordPrompt === room.password) {
-      this.joinRoom(room);
+    const passwordPrompt = prompt("Password please!");
+    socket.emit("join-room", {
+      name: this.state.username,
+      room,
+      passwordPrompt,
+    });
+  };
+
+  onJoinLockedRoomResponse = ({ success, room } ) => {
+
+    if (success) {
+      console.log('success')
+      this.setState({ room });
+      this.setState({ messages: [] });
+      console.log(this.state.rooms);
+      this.props.history.push("/" + room.name);
     } else {
-      alert("Fel lösen");
+      alert("Wrong password!");
     }
   };
 
@@ -102,6 +113,7 @@ class ChatProvider extends Component {
           joinRoom: this.joinRoom,
           joinLockedRoom: this.joinLockedRoom,
           resetRoom: this.resetRoom,
+          onJoinLockedRoomResponse: this.onJoinLockedRoomResponse,
         }}
       >
         {this.props.children}

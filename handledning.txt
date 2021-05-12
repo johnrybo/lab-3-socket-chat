@@ -12,6 +12,5 @@ Krav för godkänt:
 
 Lite buggar:
 
-- Knappar för att joina rum dyker upp först efter att man laddat om sidan
 - Om man laddar om sidan inne i en chat är man kvar i chatten men 
   har egentligen lämnat rummet och kan inte skriva / se nya meddelanden

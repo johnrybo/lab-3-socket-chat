@@ -29,27 +29,32 @@ io.on("connection", (socket) => {
     socket.leaveAll();
 
     // if the room does not exist, store it as a created room
-    if (data.room.name) {
       let room = rooms.find((room) => room.name == data.room.name);
 
       if (!room) {
         rooms.push(data.room);
       }
-    }
 
     // Return if no room was sent from the client
     if (!data.room) return;
 
-    socket.join(data.room.name);
+    if (data.passwordPrompt) {
+      if (room.password !== data.passwordPrompt) {
+        console.log('false')
+        socket.emit("join-locked-room-response", { room: data.room, success: false });
+        return;
+      }
+    }
+    
+    socket.emit("join-locked-room-response", { room: data.room, success: true });
+    socket.join(data.room.name)
     io.emit("all-rooms", getAllRooms());
 
     // Tar bort tomma rum
     removeEmptyRooms();
 
     // Välkomnar den anslutna användaren
-    socket
-      .in(data.room.name)
-      .emit("message", `Welcome to this chat, ${data.name}`);
+    socket.emit("message", `Welcome to this chat, ${data.name}`);
     console.log("Welcome to this chat");
 
     // Skickar till alla förutom användaren som ansluter
@@ -73,7 +78,7 @@ io.on("connection", (socket) => {
 function removeEmptyRooms() {
   for (const room of rooms) {
     if (io.sockets.adapter.rooms.get(room.name) === undefined) {
-      let roomIndex = rooms.findIndex((room) => room.name == room.name);
+      let roomIndex = rooms.findIndex((r) => r.name == room.name);
       rooms.splice(roomIndex, 1);
       io.emit("all-rooms", getAllRooms());
     }
