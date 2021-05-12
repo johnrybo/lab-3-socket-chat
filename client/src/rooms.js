@@ -9,6 +9,10 @@ import {
   Checkbox,
   Typography,
 } from "@material-ui/core/";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import LockIcon from "@material-ui/icons/Lock";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -18,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: "0.5rem",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   text: {
-    margin: "0.5rem"
-  }
+    margin: "0.5rem",
+  },
 }));
 
 function Rooms() {
@@ -39,6 +43,17 @@ function Rooms() {
   } = useContext(ChatContext);
 
   const [checked, setChecked] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [password, setPassword2] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  // const handleClose = () => {
+  //   joinLockedRoom(room, password)
+  //   setOpen(false);
+  // };
 
   function askToCreateRoom() {
     joinRoom(room);
@@ -68,6 +83,7 @@ function Rooms() {
       />
       {checked ? (
         <TextField
+          type="password"
           label="Password"
           onChange={(event) => setPassword(event.target.value)}
         />
@@ -96,7 +112,9 @@ function Rooms() {
       )}
 
       {rooms.length > 0 ? (
-        <Typography className={classes.text} variant="h6">Join existing rooms</Typography>
+        <Typography className={classes.text} variant="h6">
+          Join existing rooms
+        </Typography>
       ) : null}
 
       {username.length > 0
@@ -112,15 +130,46 @@ function Rooms() {
                 Join {room.name}
               </Button>
             ) : (
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                key={index}
-                onClick={() => joinLockedRoom(room)}
-              >
-                Join {room.name} {<LockIcon />}
-              </Button>
+              <div>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  key={index}
+                  onClick={handleClickOpen}
+                >
+                  Join {room.name} {<LockIcon />}
+                </Button>
+                <Dialog
+                  open={open}
+                  onClose={() => setOpen(false)}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title">Password</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      onChange={(event) => setPassword2(event.target.value)}
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="Password"
+                      type="password"
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={() => {
+                        joinLockedRoom(room, password);
+                        setOpen(false);
+                      }}
+                      color="primary"
+                    >
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
             )
           )
         : rooms.map((room, index) =>

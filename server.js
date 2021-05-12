@@ -39,6 +39,7 @@ io.on("connection", (socket) => {
     if (!data.room) return;
 
     if (data.passwordPrompt) {
+      console.log(room)
       if (room.password !== data.passwordPrompt) {
         console.log('false')
         socket.emit("join-locked-room-response", { room: data.room, success: false });

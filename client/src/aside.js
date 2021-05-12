@@ -1,10 +1,14 @@
 import "./App.css";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ChatContext } from "./context";
 // import { Link } from "react-router-dom";
 import LockIcon from "@material-ui/icons/Lock";
-import { Button } from "@material-ui/core/";
+import { Button, TextField } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,6 +42,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Aside = () => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [password, setPassword2] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const { rooms, joinRoom, joinLockedRoom, resetRoom } =
     useContext(ChatContext);
@@ -71,15 +81,46 @@ const Aside = () => {
             Join {room.name}
           </Button>
         ) : (
-          <Button
-            className={classes.button2}
-            variant="contained"
-            color="secondary"
-            key={index}
-            onClick={() => joinLockedRoom(room)}
-          >
-            Join {room.name} {<LockIcon />}
-          </Button>
+          <div>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  key={index}
+                  onClick={handleClickOpen}
+                >
+                  Join {room.name} {<LockIcon />}
+                </Button>
+                <Dialog
+                  open={open}
+                  onClose={() => setOpen(false)}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title">Password</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      onChange={(event) => setPassword2(event.target.value)}
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="Password"
+                      type="password"
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={() => {
+                        joinLockedRoom(room, password);
+                        setOpen(false);
+                      }}
+                      color="primary"
+                    >
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
         )
       )}
     </div>

@@ -64,8 +64,8 @@ class ChatProvider extends Component {
     socket.emit("join-room", { name: this.state.username, room });
   };
 
-  joinLockedRoom = (room) => {
-    const passwordPrompt = prompt("Password please!");
+  joinLockedRoom = (room, passwordPrompt) => {
+    // const passwordPrompt = prompt("Password please!");
     socket.emit("join-room", {
       name: this.state.username,
       room,
