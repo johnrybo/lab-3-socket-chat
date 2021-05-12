@@ -42,7 +42,6 @@ class ChatProvider extends Component {
     this.setState({ username });
   };
 
-  // Kanske fixa till denna
   resetRoom = (room) => {
     this.setState({ room });
   };
@@ -65,7 +64,6 @@ class ChatProvider extends Component {
   };
 
   joinLockedRoom = (room, passwordPrompt) => {
-    // const passwordPrompt = prompt("Password please!");
     socket.emit("join-room", {
       name: this.state.username,
       room,
@@ -73,20 +71,16 @@ class ChatProvider extends Component {
     });
   };
 
-  onJoinLockedRoomResponse = ({ success, room } ) => {
-
+  onJoinLockedRoomResponse = ({ success, room }) => {
     if (success) {
-      console.log('success')
       this.setState({ room });
       this.setState({ messages: [] });
-      console.log(this.state.rooms);
       this.props.history.push("/" + room.name);
     } else {
       alert("Wrong password!");
     }
   };
 
-  // skicka med username också
   sendMessage = (message) => {
     socket.emit("send-message", {
       message,
@@ -96,7 +90,6 @@ class ChatProvider extends Component {
   };
 
   handleNewMessage = (message) => {
-    console.log(message);
     this.setState({ messages: [...this.state.messages, message] });
   };
 

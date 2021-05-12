@@ -50,11 +50,6 @@ function Rooms() {
     setOpen(true);
   };
 
-  // const handleClose = () => {
-  //   joinLockedRoom(room, password)
-  //   setOpen(false);
-  // };
-
   function askToCreateRoom() {
     joinRoom(room);
   }

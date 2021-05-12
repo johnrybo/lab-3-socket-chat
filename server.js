@@ -9,9 +9,6 @@ const rooms = [];
 
 // CONNECT
 io.on("connection", (socket) => {
-  // socket.removeAllListeners("send-message");
-  // socket.removeAllListeners("join-room");
-
   console.log("Client was connected: ", socket.id);
   io.emit("client id", socket.id);
 
@@ -28,27 +25,29 @@ io.on("connection", (socket) => {
   socket.on("join-room", (data) => {
     socket.leaveAll();
 
-    // if the room does not exist, store it as a created room
-      let room = rooms.find((room) => room.name == data.room.name);
+    let room = rooms.find((room) => room.name == data.room.name);
 
-      if (!room) {
-        rooms.push(data.room);
-      }
+    if (!room) {
+      rooms.push(data.room);
+    }
 
-    // Return if no room was sent from the client
     if (!data.room) return;
 
     if (data.passwordPrompt) {
-      console.log(room)
       if (room.password !== data.passwordPrompt) {
-        console.log('false')
-        socket.emit("join-locked-room-response", { room: data.room, success: false });
+        socket.emit("join-locked-room-response", {
+          room: data.room,
+          success: false,
+        });
         return;
       }
     }
-    
-    socket.emit("join-locked-room-response", { room: data.room, success: true });
-    socket.join(data.room.name)
+
+    socket.emit("join-locked-room-response", {
+      room: data.room,
+      success: true,
+    });
+    socket.join(data.room.name);
     io.emit("all-rooms", getAllRooms());
 
     // Tar bort tomma rum
@@ -56,15 +55,12 @@ io.on("connection", (socket) => {
 
     // Välkomnar den anslutna användaren
     socket.emit("message", `Welcome to this chat, ${data.name}`);
-    console.log("Welcome to this chat");
 
     // Skickar till alla förutom användaren som ansluter
     socket.to(data.room.name).emit("message", `${data.name} joined this chat!`);
 
     // DISCONNECT
     socket.on("disconnect", () => {
-      console.log("User disconnected");
-
       socket
         .in(data.room.name)
         .emit("message", `${data.name} left this chat :(`);

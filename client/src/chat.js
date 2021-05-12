@@ -9,7 +9,7 @@ const Chat = () => {
   const el = useRef(null);
 
   useEffect(() => {
-    el.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    el.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
   });
 
   // Skickar det som skrivs i textfältet
@@ -19,7 +19,6 @@ const Chat = () => {
     // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
     sendMessage(message);
-
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
@@ -38,7 +37,7 @@ const Chat = () => {
             </div>
           );
         })}
-        <div ref={el} style={{ height: '0', padding: '0' }}></div>
+        <div ref={el} style={{ height: "0", padding: "0" }}></div>
       </div>
       <form id="form" onSubmit={prepareToSendMessage}>
         <input
