@@ -46,10 +46,11 @@ const Chat = () => {
   const { messages, sendMessage } = useContext(ChatContext);
   const [message, setMessage] = useState("");
   const el = useRef(null);
-  const inputRef = useRef(null)
+  const inputRef = useRef("")
 
   useEffect(() => {
     el.current.scrollIntoView({ block: "end", behavior: "smooth", inline: "nearest" });
+    console.log(message)
   });
 
   // Skickar det som skrivs i textfältet
@@ -57,9 +58,9 @@ const Chat = () => {
     e.preventDefault();
 
     // Tömmer textfältet när man skickat ett meddelande
-    setMessage(inputRef.value)
+    setMessage(inputRef.current.value)
     sendMessage(message);
-    setMessage("");
+    inputRef.current.value = "";
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
@@ -84,7 +85,7 @@ const Chat = () => {
         <input
           ref={inputRef}
           className={classes.input}
-          value={message}
+          defaultValue={message}
           // onChange={handleChange}
           placeholder="Say something..."
         />
