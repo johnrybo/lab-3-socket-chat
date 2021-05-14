@@ -51,6 +51,7 @@
 }
 
 .App {
+  max-height: -webkit-fill-available;
   position: relative
 }
 
