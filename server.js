@@ -90,4 +90,4 @@ function getAllRooms() {
   return rooms;
 }
 
-server.listen(3001, () => console.log("server is running on port 3001"));
+server.listen(PORT, () => console.log(PORT));
