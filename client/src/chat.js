@@ -1,6 +1,6 @@
 import "./App.css";
 import Aside from "./aside";
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { ChatContext } from "./context";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -46,25 +46,26 @@ const Chat = () => {
   const { messages, sendMessage } = useContext(ChatContext);
   const [message, setMessage] = useState("");
   const el = useRef(null);
+  const inputRef = useRef(null)
 
-  // useEffect(() => {
-  //   el.current.scrollIntoView({ block: "nearest", behavior: "smooth", inline: "nearest" });
-  // });
+  useEffect(() => {
+    el.current.scrollIntoView({ block: "end", behavior: "smooth", inline: "nearest" });
+  });
 
   // Skickar det som skrivs i textfältet
   function prepareToSendMessage(e) {
     e.preventDefault();
 
     // Tömmer textfältet när man skickat ett meddelande
-    setMessage("");
+    setMessage(inputRef.value)
     sendMessage(message);
-    el.current.scrollIntoView({ block: "end", behavior: "smooth", inline: "nearest" });
+    setMessage("");
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
-  function handleChange(e) {
-    setMessage(e.target.value);
-  }
+  // function handleChange(e) {
+  //   setMessage(e.target.value);
+  // }
 
   return (
     <div className="Chat">
@@ -81,9 +82,10 @@ const Chat = () => {
       </div>
       <form className={classes.form} onSubmit={prepareToSendMessage}>
         <input
+          ref={inputRef}
           className={classes.input}
           value={message}
-          onChange={handleChange}
+          // onChange={handleChange}
           placeholder="Say something..."
         />
         <button className={classes.button}>SEND</button>
