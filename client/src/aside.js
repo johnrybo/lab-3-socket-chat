@@ -26,16 +26,19 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   button: {
-    margin: "1rem",
+    marginLeft: "1rem",
+    marginRight: "1rem",
     backgroundColor: "aliceblue",
     fontWeight: "bold",
   },
   button2: {
-    margin: "1rem",
+    marginLeft: "1rem",
+    marginRight: "1rem",
     fontWeight: "bold",
   },
   textField: {
-    margin: "1rem",
+    marginLeft: "1rem",
+    marginRight: "1rem",
   },
 }));
 
