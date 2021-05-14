@@ -1,5 +1,4 @@
 import "./App.css";
-// import Start from "./start";
 import Chat from "./chat";
 import React from "react";
 import Rooms from './rooms'
@@ -13,7 +12,6 @@ function App() {
     <ChatProvider>
       <div className="App">
         <Switch>
-          {/* <Route exact path="/" component={Start} /> */}
           <Route exact path="/" component={Rooms} />
           <Route exact path="/:roomName" component={Chat} />
         </Switch>

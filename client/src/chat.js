@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     fontWeight: "bold",
     fontSize: "1rem",
+    cursor: "pointer",
   },
   form: {
     background: "#3f51b5",

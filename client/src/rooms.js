@@ -55,7 +55,7 @@ function Rooms() {
   }
 
   return (
-    <div className="Start">
+    <div className="Rooms">
       <TextField
         value={username}
         label="Username"
