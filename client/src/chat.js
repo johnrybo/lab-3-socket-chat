@@ -2,8 +2,46 @@ import "./App.css";
 import Aside from "./aside";
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { ChatContext } from "./context";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    background: "#f50057",
+    border: "none",
+    padding: "0.5rem 1rem",
+    margin: "0.25rem",
+    borderRadius: "3px",
+    outline: "none",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: "1rem",
+  },
+  form: {
+    background: "#3f51b5",
+    padding: "0.25rem",
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: "flex",
+    boxSizing: "border-box",
+    backdropFilter: "blur(10px)",
+  },
+  input: {
+    border: "none",
+    padding: "0 1rem",
+    flexGrow: 1,
+    borderRadius: "2rem",
+    margin: "0.25rem",
+    fontSize: "1rem",
+    "&:focus": {
+      outline: "none",
+    },
+  },
+}));
 
 const Chat = () => {
+  const classes = useStyles();
   const { messages, sendMessage } = useContext(ChatContext);
   const [message, setMessage] = useState("");
   const el = useRef(null);
@@ -39,14 +77,14 @@ const Chat = () => {
         })}
         <div ref={el} style={{ height: "0", padding: "0" }}></div>
       </div>
-      <form id="form" onSubmit={prepareToSendMessage}>
+      <form className={classes.form} onSubmit={prepareToSendMessage}>
         <input
-          id="input"
+          className={classes.input}
           value={message}
           onChange={handleChange}
           placeholder="Say something..."
         />
-        <button>SEND</button>
+        <button className={classes.button}>SEND</button>
       </form>
     </div>
   );

@@ -1,4 +1,4 @@
-#form {
+/* #form {
   background: #3f51b5;
   padding: 0.25rem;
   position: fixed;
@@ -6,7 +6,6 @@
   left: 0;
   right: 0;
   display: flex;
-  /* height: 3rem; */
   box-sizing: border-box;
   backdrop-filter: blur(10px);
 }
@@ -31,7 +30,7 @@
   color: #fff;
   font-weight: bold;
   font-size: 1rem;
-}
+} */
 
 #messages {
   margin: 0;
