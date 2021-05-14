@@ -48,7 +48,7 @@ const Chat = () => {
   const el = useRef(null);
 
   useEffect(() => {
-    el.current.scrollIntoView({ block: "end", behavior: "smooth", inline: "nearest" });
+    el.current.scrollIntoView({ block: "nearest", behavior: "smooth", inline: "nearest" });
   });
 
   // Skickar det som skrivs i textfältet
