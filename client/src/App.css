@@ -21,8 +21,8 @@ body {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: 3rem;
-  top: 0;
+  bottom: 3.3rem;
+  top: 10vh;
   left: 0;
   right: 0;
   overflow: auto;
