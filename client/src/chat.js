@@ -1,6 +1,6 @@
 import "./App.css";
 import Aside from "./aside";
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { ChatContext } from "./context";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -47,9 +47,9 @@ const Chat = () => {
   const [message, setMessage] = useState("");
   const el = useRef(null);
 
-  useEffect(() => {
-    el.current.scrollIntoView({ block: "nearest", behavior: "smooth", inline: "nearest" });
-  });
+  // useEffect(() => {
+  //   el.current.scrollIntoView({ block: "nearest", behavior: "smooth", inline: "nearest" });
+  // });
 
   // Skickar det som skrivs i textfältet
   function prepareToSendMessage(e) {
@@ -58,6 +58,7 @@ const Chat = () => {
     // Tömmer textfältet när man skickat ett meddelande
     setMessage("");
     sendMessage(message);
+    el.current.scrollIntoView({ block: "end", behavior: "smooth", inline: "nearest" });
   }
 
   // Sparar det som skrivs i textfältet i ett state när man skriver
