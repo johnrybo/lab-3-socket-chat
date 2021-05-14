@@ -1,6 +1,6 @@
 import "./App.css";
 import Aside from "./aside";
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { ChatContext } from "./context";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -43,14 +43,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = () => {
   const classes = useStyles();
-  const { messages, sendMessage } = useContext(ChatContext);
-  const [message, setMessage] = useState("");
+  const { messages, sendMessage } = useContext(ChatContext)
   const el = useRef(null);
   const inputRef = useRef("")
 
   useEffect(() => {
     el.current.scrollIntoView({ block: "end", behavior: "smooth", inline: "nearest" });
-    console.log(message)
   });
 
   // Skickar det som skrivs i textfältet
@@ -58,15 +56,11 @@ const Chat = () => {
     e.preventDefault();
 
     // Tömmer textfältet när man skickat ett meddelande
-    setMessage(inputRef.current.value)
-    sendMessage(message);
+    console.log(inputRef.current.value)
+    // setMessage(inputRef.current.value)
+    sendMessage(inputRef.current.value);
     inputRef.current.value = "";
   }
-
-  // Sparar det som skrivs i textfältet i ett state när man skriver
-  // function handleChange(e) {
-  //   setMessage(e.target.value);
-  // }
 
   return (
     <div className="Chat">
@@ -85,8 +79,7 @@ const Chat = () => {
         <input
           ref={inputRef}
           className={classes.input}
-          defaultValue={message}
-          // onChange={handleChange}
+          defaultValue={inputRef.current.value}
           placeholder="Say something..."
         />
         <button className={classes.button}>SEND</button>
